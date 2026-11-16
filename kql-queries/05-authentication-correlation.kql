@@ -1,0 +1,15 @@
+let F = SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4625
+| where isnotempty(TargetAccount)
+| extend UserName=tolower(tostring(split(TargetAccount,"\\")[-1]))
+| project Computer, UserName, FailedTime=TimeGenerated, FailedIP=IpAddress, FailedLogonType=LogonType;
+let S = SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4624
+| where isnotempty(TargetAccount)
+| extend UserName=tolower(tostring(split(TargetAccount,"\\")[-1]))
+| project Computer, UserName, SuccessTime=TimeGenerated, SuccessIP=IpAddress, SuccessLogonType=LogonType;
+F | join kind=inner S on Computer,UserName
+| where SuccessTime between (FailedTime .. (FailedTime + 30m))
+| extend MinutesBetween=datetime_diff("minute",SuccessTime,FailedTime)
+| project UserName,FailedTime,SuccessTime,MinutesBetween,FailedIP,SuccessIP,FailedLogonType,SuccessLogonType
+| order by FailedTime desc

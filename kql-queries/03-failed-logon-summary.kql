@@ -1,0 +1,5 @@
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where Computer =~ "vm-win-security" and EventID == 4625
+| summarize FailedAttempts=count(), FirstAttempt=min(TimeGenerated), LastAttempt=max(TimeGenerated) by TargetAccount, IpAddress, LogonType
+| order by FailedAttempts desc

@@ -1,0 +1,5 @@
+SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4688
+| where isnotempty(NewProcessName)
+| summarize ExecutionCount=count(),FirstSeen=min(TimeGenerated),LastSeen=max(TimeGenerated) by NewProcessName
+| top 15 by ExecutionCount desc

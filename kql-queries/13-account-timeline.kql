@@ -1,0 +1,5 @@
+SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4720
+| summarize CreationEvents=count() by bin(TimeGenerated,5m)
+| order by TimeGenerated asc
+| render timechart

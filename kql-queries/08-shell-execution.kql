@@ -1,0 +1,5 @@
+SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4688
+| where NewProcessName endswith @"\powershell.exe" or NewProcessName endswith @"\pwsh.exe" or NewProcessName endswith @"\cmd.exe"
+| project TimeGenerated,Account,NewProcessName,ParentProcessName,CommandLine
+| order by TimeGenerated desc

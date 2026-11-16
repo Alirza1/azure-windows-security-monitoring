@@ -1,0 +1,3 @@
+SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4688
+| summarize TotalEvents=count(),WithCommandLine=countif(isnotempty(CommandLine)),WithoutCommandLine=countif(isempty(CommandLine))

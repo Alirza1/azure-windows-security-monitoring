@@ -1,0 +1,6 @@
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where Computer =~ "vm-win-security" and EventID == 4625
+| summarize FailedAttempts=count() by bin(TimeGenerated,15m)
+| order by TimeGenerated asc
+| render timechart

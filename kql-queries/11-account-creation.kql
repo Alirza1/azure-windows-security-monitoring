@@ -1,0 +1,4 @@
+SecurityEvent
+| where TimeGenerated > ago(24h) and Computer =~ "vm-win-security" and EventID == 4720
+| project TimeGenerated,Computer,Account,TargetAccount,Activity
+| order by TimeGenerated desc

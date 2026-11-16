@@ -1,0 +1,8 @@
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where Computer =~ "vm-win-security"
+| where EventID in (4624, 4625, 4688, 4720)
+| summarize EventCount=count(), FirstEvent=min(TimeGenerated), LastEvent=max(TimeGenerated) by EventID
+| extend EventDescription = case(EventID==4624,"Successful Logon",EventID==4625,"Failed Logon",EventID==4688,"Process Creation",EventID==4720,"User Account Created","Other")
+| project EventID, EventDescription, EventCount, FirstEvent, LastEvent
+| order by EventID asc

@@ -1,0 +1,6 @@
+// Logical detection query matching the observed Event ID 4720 use case.
+// IMPORTANT: exact deployed scheduled rule configuration was not captured.
+SecurityEvent
+| where EventID == 4720
+| where Computer =~ "vm-win-security"
+| project TimeGenerated, Computer, Account, TargetAccount, Activity

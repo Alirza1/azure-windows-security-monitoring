@@ -1,0 +1,5 @@
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where Computer =~ "vm-win-security" and EventID == 4625
+| project TimeGenerated, Computer, TargetAccount, Account, LogonType, IpAddress, Activity
+| order by TimeGenerated desc
